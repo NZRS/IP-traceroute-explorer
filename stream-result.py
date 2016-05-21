@@ -1,10 +1,12 @@
-import ripe.atlas.cousteau
+from __future__ import absolute_import
+from ripe.atlas.cousteau import AtlasStream
+
 
 def on_result_response(*args):
     print args[0]
 
 
-atlas_stream = ripe.atlas.cousteau.AtlasStream()
+atlas_stream = AtlasStream()
 atlas_stream.timeout(seconds=5)
 atlas_stream.connect()
 # Measurement results
