@@ -4,23 +4,42 @@
     <meta charset="UTF-8">
     <title>RIPE Atlas: IP traceroute explorer</title>
     <style type="text/css">
-        #ipv4 {
+        .container {
             height: 200px;
             width: 100%;
             background: black;
+            float: left;
         }
-        #ipv6 {
+        .label {
+            color: white;
+            font-size: 20px;
             height: 200px;
-            width: 100%;
-            background: black;
+            width: 50px;
+            margin: 5px;
+            float: left;
+        }
+        .path {
+            width: 85%;
+            height: 200px;
+            float: left;
         }
     </style>
 </head>
 <body>
 <script src="graph.js"></script>
 <script src="js/vis.min.js"></script>
-<div id="ipv4"></div>
-<div id="ipv6"></div>
+<div id="ipv4_container" class="container">
+    <div id="ipv4_label" class="label">
+        <span>IPv4</span>
+    </div>
+    <div id="ipv4_path" class="path"></div>
+</div>
+<div id="ipv6_container" class="container">
+    <div id="ipv6_label" class="label">
+        <span>IPv6</span>
+    </div>
+    <div id="ipv6_path" class="path"></div>
+</div>
 <script type="text/javascript">
     var v4_net;
     var v6_net;
@@ -29,8 +48,8 @@
     var v4_edges = new vis.DataSet(src_v4_edges);
     var v6_edges = new vis.DataSet(src_v6_edges);
 
-    var v4_div = document.getElementById('ipv4');
-    var v6_div = document.getElementById('ipv6');
+    var v4_div = document.getElementById('ipv4_path');
+    var v6_div = document.getElementById('ipv6_path');
 
     var options = {
         autoResize: false,
