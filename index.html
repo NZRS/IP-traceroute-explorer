@@ -28,6 +28,7 @@
 <body>
 <script src="graph.js"></script>
 <script src="js/vis.min.js"></script>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 <div id="ipv4_container" class="container">
     <div id="ipv4_label" class="label">
         <span>IPv4</span>
@@ -43,14 +44,8 @@
 <script type="text/javascript">
     var v4_net;
     var v6_net;
-    var v4_nodes = new vis.DataSet(src_v4_nodes);
-    var v6_nodes = new vis.DataSet(src_v6_nodes);
-    var v4_edges = new vis.DataSet(src_v4_edges);
-    var v6_edges = new vis.DataSet(src_v6_edges);
-
     var v4_div = document.getElementById('ipv4_path');
     var v6_div = document.getElementById('ipv6_path');
-
     var options = {
         autoResize: false,
         width: '100%',
@@ -98,10 +93,26 @@
         }
     };
 
-    v4_network = new vis.Network(v4_div, {nodes: v4_nodes, edges: v4_edges},
-    options);
-    v6_network = new vis.Network(v6_div, {nodes: v6_nodes, edges: v6_edges},
-    options);
+    $.getJSON('http://localhost:8080/path/ipv4')
+        .done(function(data) {
+            src_v4_nodes = data.nodes;
+            src_v4_edges = data.edges;
+            var v4_nodes = new vis.DataSet(src_v4_nodes);
+            var v4_edges = new vis.DataSet(src_v4_edges);
+            v4_network = new vis.Network(v4_div,
+                {nodes: v4_nodes, edges: v4_edges}, options);
+        });
+
+    $.getJSON('http://localhost:8080/path/ipv6')
+        .done(function(data) {
+            src_v6_nodes = data.nodes;
+            src_v6_edges = data.edges;
+            var v6_nodes = new vis.DataSet(src_v6_nodes);
+            var v6_edges = new vis.DataSet(src_v6_edges);
+            v6_network = new vis.Network(v6_div,
+                {nodes: v6_nodes, edges: v6_edges}, options);
+        });
+
 </script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-from bottle import route, run, template
+from bottle import route, run, hook, response
 import json
 from ripe.atlas.sagan import TracerouteResult
 import networkx as nx
@@ -44,6 +44,11 @@ def transform_graph(g):
            'label': d['rtt']} for s, t, d in g.edges_iter(data=True)]
 
     return nl, el
+
+
+@hook('after_request')
+def enable_cors():
+    response.headers['Access-Control-Allow-Origin'] = '*'
 
 
 @route('/path/<family>')
