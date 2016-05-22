@@ -20,8 +20,13 @@
         }
         .path {
             width: 85%;
-            height: 200px;
+            height: 250px;
             float: left;
+        }
+        #menu {
+            margin: 3px;
+            background: black;
+            color: white;
         }
     </style>
 </head>
@@ -29,6 +34,25 @@
 <script src="graph.js"></script>
 <script src="js/vis.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<div>
+    <h2>Dual stack Path Comparison</h2>
+    <span><p>
+        By collecting a number of traceroutes from dual-stack probes against
+        certain destinations known to be dual-stack as well, and executed
+        closely to each other, we expect to explore the differences in the IP
+        Path when using IPv4 versus IPv6.</p>
+    </span>
+    <span><p>
+        In the graph, the size of the ASN represents the number of hops
+        traversed while inside the ASN, and the thickness of the edge represents
+        the Median RTT observed until the edge of the ASN.</p>
+        <p>Green is the origin AS, Yellow is the destination AS</p>
+    </span>
+</div>
+<div id="menu">
+    <span>Select existing experiment</span>
+    <select id="experiment"></select>
+</div>
 <div id="ipv4_container" class="container">
     <div id="ipv4_label" class="label">
         <span>IPv4</span>
@@ -71,12 +95,12 @@
                 color: 'rgba(255, 255, 255, 0.5)'
             },
             scaling: {
-                min: 1,
-                max: 20,
+                min: 4,
+                max: 16,
                 label: {
                     enabled: true,
-                    min: 10,
-                    max: 20
+                    min: 8,
+                    max: 18
                 }
             }
         },
@@ -93,25 +117,37 @@
         }
     };
 
-    $.getJSON('http://localhost:8080/path/ipv4')
+    // Build me menu of available experiments
+    $.getJSON('http://localhost:8080/experiment')
         .done(function(data) {
-            src_v4_nodes = data.nodes;
-            src_v4_edges = data.edges;
-            var v4_nodes = new vis.DataSet(src_v4_nodes);
-            var v4_edges = new vis.DataSet(src_v4_edges);
-            v4_network = new vis.Network(v4_div,
-                {nodes: v4_nodes, edges: v4_edges}, options);
+            $.each(data.items, function() {
+                $('#experiment').append("<option value=\"" + this.id + "\">" + this.label + "</option>");
+            });
         });
 
-    $.getJSON('http://localhost:8080/path/ipv6')
-        .done(function(data) {
-            src_v6_nodes = data.nodes;
-            src_v6_edges = data.edges;
-            var v6_nodes = new vis.DataSet(src_v6_nodes);
-            var v6_edges = new vis.DataSet(src_v6_edges);
-            v6_network = new vis.Network(v6_div,
-                {nodes: v6_nodes, edges: v6_edges}, options);
-        });
+    $('#experiment').change(function() {
+        console.log("Fetching IP path for " + this.value + "\n");
+        $.getJSON('http://localhost:8080/path/ipv4', {'id': this.value})
+            .done(function(data) {
+                src_v4_nodes = data.nodes;
+                src_v4_edges = data.edges;
+                var v4_nodes = new vis.DataSet(src_v4_nodes);
+                var v4_edges = new vis.DataSet(src_v4_edges);
+                v4_network = new vis.Network(v4_div,
+                    {nodes: v4_nodes, edges: v4_edges}, options);
+            });
+
+        $.getJSON('http://localhost:8080/path/ipv6', {'id': this.value})
+            .done(function(data) {
+                src_v6_nodes = data.nodes;
+                src_v6_edges = data.edges;
+                var v6_nodes = new vis.DataSet(src_v6_nodes);
+                var v6_edges = new vis.DataSet(src_v6_edges);
+                v6_network = new vis.Network(v6_div,
+                    {nodes: v6_nodes, edges: v6_edges}, options);
+            });
+    });
+
 
 </script>
 </body>

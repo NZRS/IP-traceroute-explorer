@@ -24,7 +24,10 @@ def get_addr_as(a):
     except KeyError:
         return None
 
-    return list(origin)[0]
+    if len(origin) > 0:
+        return list(origin)[0]
+
+    return None
 
 
 def transform_graph(g):
@@ -73,11 +76,16 @@ for msm_f in sys.argv[1:]:
 
                 for a in hop_addr:
                     asn = get_addr_as(a)
-                    hop_cnt[sagan_res.af][asn] += 1
-                    hop_idx[sagan_res.af][asn] = hop.index
-                    addr2as[a] = asn
+                    if asn is not None:
+                        hop_cnt[sagan_res.af][asn] += 1
+                        hop_idx[sagan_res.af][asn] = hop.index
+                        addr2as[a] = asn
+                    else:
+                        hop_cnt[sagan_res.af][prev_asn] += 1
+                        hop_idx[sagan_res.af][prev_asn] = hop.index
+                        addr2as[a] = prev_asn
                     print("%s - %s [%s]" % (a, asn, hop.median_rtt))
-                    if prev_asn != asn:
+                    if asn is not None and prev_asn != asn:
                         G[sagan_res.af].add_edge(prev_asn, asn, rtt=hop.median_rtt)
                         prev_asn = asn
 
