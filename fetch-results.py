@@ -23,7 +23,7 @@ for src, v1 in msm.iteritems():
                     with open('%s.json' % msm_id, 'wb') as f:
                         json.dump(results, f)
 
-                entry[af].append(msm_id)
+                entry[af] = results
 
         metadata[idx] = {'ipv4': entry['4'],
                          'ipv6': entry['6'],
