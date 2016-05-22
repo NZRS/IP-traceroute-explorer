@@ -14,6 +14,10 @@ the same time for v4 and v6.
 
 This project is self-contained, the data used is included.
 
+## Screenshot
+
+![Screen shot](/screenshot.png?raw=true)
+
 ## Usage
 
 For the REST server that provides the data, run
