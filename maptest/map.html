@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>IPv4/IPv6 traceroutes</title>
+		<meta charset="UTF-8">
+		<link rel="stylesheet" type="text/css" href="leaflet.css"/>
+	</head>
+	<body>
+		<h1>Geocoded <span style="color:red;">IPv4</span>/<span style="color:blue;">IPv6</span> traceroutes</h1>
+
+		<div style="width:19%;float:right;">
+			<p><b>Source probe:</b> <span id="srcprobe"></span></p>
+			<p><b>Destination probe:</b> <span id="dstprobe"></span></p>
+			<!--<p><a href="#" onclick="next_trace();return false;">Next trace</a></b>-->
+		</div>
+
+		<div id="map" style="width:80%;height:500px;"></div>
+		<script type="text/javascript" src="leaflet.js"></script>
+		<script type="text/javascript" src="map.js"></script>
+	</body>
+</html>
